@@ -3,7 +3,7 @@ var express = require('express');
 var app = express();
 
 app.use(express.static('client'));
-var server = app.listen(8080);
+var server = app.listen(process.env.PORT || 8080);
 
 var globalRocketX;
 var globalRocketY;
@@ -69,7 +69,6 @@ io.sockets.on('connect', function (socket) {
 
 function emitStep() {
   updateGame();
-  console.log(offset);
   io.sockets.emit('step', {
     globalRocketX: globalRocketX,
     globalRocketY: globalRocketY,
@@ -83,7 +82,6 @@ function emitStep() {
 }
 
 function updateGame() {
-  console.log(offset);
   offset--;
   if (offset < 0) {
     offset = board.length - 1;

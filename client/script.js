@@ -10,7 +10,7 @@ var moneybox;
 var startTime;
 var step;
 
-var socket = io.connect('http://localhost:8080');
+var socket = io.connect('/');
 var moneyBox;
 
 socket.on('step', function (data) {

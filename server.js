@@ -64,6 +64,7 @@ io.sockets.on('connect', function (socket) {
 
     if (userCount == 0) {
       clearInterval(interval);
+      reset();
     }
   });
 
@@ -100,9 +101,8 @@ function checkGameOver() {
     money = Math.min(2.000, money, Math.round(((0.001*(time-startTime))/1000)*1000)/1000);
     io.sockets.emit('gameover', {money: money});
     clearInterval(interval);
-    return true;
+    reset();
   }
-  return false;
 }
 
 function updateMoney() {
@@ -134,4 +134,21 @@ function updateGlobalRocket() {
     globalRocketX = modeVote*step;
   }
   votes = {};
+}
+
+function reset() {
+  globalRocketX = 0;
+  globalRocketY = 0;
+  globalRocketPos = 0;
+  board = [[0,0,0,0,0],
+           [0,0,0,0,1],
+           [0,0,0,0,0],
+           [0,0,0,0,0],
+           [0,1,0,1,1],
+           [0,0,0,0,1],
+           [0,0,0,0,1]];
+  offset = 0;
+  money = 0.000;
+  startTime = new Date().getTime();
+  step = 50;
 }

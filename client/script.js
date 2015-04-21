@@ -65,6 +65,7 @@ function setup() {
 
 function gameOver(money, time){
   alert('game over \n Money Earned: $' + money);
+  socket.emit('start');
 }
 
 function redraw() {

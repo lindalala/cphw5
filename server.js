@@ -12,7 +12,7 @@ var board;
 var offset;
 var boardLen;
 var money;
-var startTime;
+var startTime = null;
 var step;
 
 var votes = {};
@@ -25,7 +25,7 @@ var io = require('socket.io')(server);
 io.sockets.on('connect', function (socket) {
   userCount++;
 
-  if (userCount === 1) {
+  if (startTime == null) {
     globalRocketX = 0;
     globalRocketY = 0;
     globalRocketPos = 0;
@@ -40,7 +40,6 @@ io.sockets.on('connect', function (socket) {
     money = 0.000;
     startTime = new Date().getTime();
     step = 50;
-
     interval = setInterval(emitStep, 1000);
   }
 
@@ -64,10 +63,9 @@ io.sockets.on('connect', function (socket) {
 
     if (userCount == 0) {
       clearInterval(interval);
-      reset();
+      startTime = null;
     }
   });
-
 });
 
 function emitStep() {
@@ -101,7 +99,7 @@ function checkGameOver() {
     money = Math.min(2.000, money, Math.round(((0.001*(time-startTime))/1000)*1000)/1000);
     io.sockets.emit('gameover', {money: money});
     clearInterval(interval);
-    reset();
+    startTime = null;
   }
 }
 
@@ -134,21 +132,4 @@ function updateGlobalRocket() {
     globalRocketX = modeVote*step;
   }
   votes = {};
-}
-
-function reset() {
-  globalRocketX = 0;
-  globalRocketY = 0;
-  globalRocketPos = 0;
-  board = [[0,0,0,0,0],
-           [0,0,0,0,1],
-           [0,0,0,0,0],
-           [0,0,0,0,0],
-           [0,1,0,1,1],
-           [0,0,0,0,1],
-           [0,0,0,0,1]];
-  offset = 0;
-  money = 0.000;
-  startTime = new Date().getTime();
-  step = 50;
 }

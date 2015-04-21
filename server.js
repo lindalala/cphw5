@@ -18,6 +18,7 @@ var step;
 var votes = {};
 var interval;
 var userCount = 0;
+var time;
 
 var io = require('socket.io')(server);
 
@@ -66,14 +67,9 @@ io.sockets.on('connect', function (socket) {
     }
   });
 
-  // if (money === 2.000 || board[(offset+boardLen-1) % (board.length)][rocketPos]) {
-  //   gameOver(money, new Date().getTime());
-  //   return;
-  // }
 });
 
 function emitStep() {
-  console.log(offset);
   updateGame();
   io.sockets.emit('step', {
     globalRocketX: globalRocketX,
@@ -85,6 +81,7 @@ function emitStep() {
     startTime: startTime,
     step: step
   });
+  checkGameOver();
 }
 
 function updateGame() {
@@ -94,6 +91,23 @@ function updateGame() {
   }
 
   updateGlobalRocket();
+  updateMoney();
+}
+
+function checkGameOver() {
+  if (money === 2.000 || board[(offset+board.length-2) % (board.length)][globalRocketPos]) {
+    time = new Date().getTime();
+    money = Math.min(2.000, money, Math.round(((0.001*(time-startTime))/1000)*1000)/1000);
+    io.sockets.emit('gameover', {money: money});
+    clearInterval(interval);
+    return true;
+  }
+  return false;
+}
+
+function updateMoney() {
+  time = new Date().getTime();
+  money = Math.min(2.000, Math.round(((0.001*(time-startTime))/1000)*1000)/1000);
 }
 
 function updateGlobalRocket() {

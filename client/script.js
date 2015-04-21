@@ -38,7 +38,7 @@ socket.on('start', function (data) {
 });
 
 socket.on('gameover', function (data) {
-  gameOver(data.money, data.time);
+  gameOver(data.money);
 });
 
 function setup() {
@@ -64,13 +64,7 @@ function setup() {
 }
 
 function gameOver(money, time){
-  // clearInterval(interval);
-  // money = Math.min(2.000, money, Math.round(((0.001*(time-startTime))/1000)*1000)/1000);
-  // $('input[name="time"]').val(time/1000);
-  // $('input[name="earnings"]').val(money);
-  // $('#mturk_form').submit();
-  // alert('Your HIT has been submitted. \n You have earned: $' + money);
-  alert('game over');
+  alert('game over \n Money Earned: $' + money);
 }
 
 function redraw() {

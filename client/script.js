@@ -14,7 +14,6 @@ var socket = io.connect('/');
 var moneyBox;
 
 socket.on('step', function (data) {
-  console.log("STEP");
   globalRocketX = data.globalRocketX;
   globalRocketY = data.globalRocketY;
   globalRocketPos = data.globalRocketPos;
@@ -27,7 +26,6 @@ socket.on('step', function (data) {
 });
 
 socket.on('start', function (data) {
-  console.log('START');
   globalRocketX = data.globalRocketX;
   globalRocketY = data.globalRocketY;
   globalRocketPos = data.globalRocketPos;
@@ -55,7 +53,8 @@ function setup() {
     var gridRow = $("<div class='gridrow' id='row_"+i+"'></div>");
     $(gameboard).append(gridRow);
     for (var j=0; j<board[0].length; j++){
-      if (board[i][j]) {
+      var iOff = (offset+i) % (board.length);
+      if (board[iOff][j]) {
         $(gridRow).append($("<div class='gridcell enemy'></div>"));
       } else {
         $(gridRow).append($("<div class='gridcell free'></div>"));

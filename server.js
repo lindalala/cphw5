@@ -1,8 +1,8 @@
-
 var express = require('express');
 var app = express();
 
 app.use(express.static('client'));
+
 var server = app.listen(process.env.PORT || 8080);
 
 var globalRocketX;
@@ -20,6 +20,7 @@ var interval;
 var userCount = 0;
 
 var io = require('socket.io')(server);
+
 io.sockets.on('connect', function (socket) {
   userCount++;
 
@@ -59,6 +60,10 @@ io.sockets.on('connect', function (socket) {
 
   socket.on('disconnect', function() {
     userCount--;
+
+    if (userCount == 0) {
+      clearInterval(interval);
+    }
   });
 
   // if (money === 2.000 || board[(offset+boardLen-1) % (board.length)][rocketPos]) {
@@ -68,6 +73,7 @@ io.sockets.on('connect', function (socket) {
 });
 
 function emitStep() {
+  console.log(offset);
   updateGame();
   io.sockets.emit('step', {
     globalRocketX: globalRocketX,
